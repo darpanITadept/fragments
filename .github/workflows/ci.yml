@@ -55,5 +55,7 @@ jobs:
           node-version: '18'
           cache: 'npm'
 
-      - name: Install node dependencies and run Tests
+      - name: Install node dependencies and run Test
+        # 2. Use `install-ci-test` to do it in a single command, see https://docs.npmjs.com/cli/v8/commands/npm-install-ci-test
+        # run: npm install-ci-test
         run: npm install-ci-test
