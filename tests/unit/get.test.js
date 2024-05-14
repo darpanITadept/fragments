@@ -21,4 +21,6 @@ describe('GET /v1/fragments', () => {
   });
 
   // TODO: we'll need to add tests to check the contents of the fragments array later
+  // If the request is missing the Authorization header, it should be forbidden
+  test('unauthenticated requests are denied', () => request(app).get('/v1/fragments').expect(500));
 });
