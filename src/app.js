@@ -16,6 +16,8 @@ const pino = require('pino-http')({
   logger,
 });
 
+logger.info('Version: ' + version + ' | Author: ' + author);
+
 // Create an express app instance we can use to attach middleware and HTTP routes
 const app = express();
 
