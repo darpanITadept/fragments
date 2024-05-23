@@ -1,5 +1,6 @@
 // src/app.js
 
+const path = require('path');
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
@@ -21,6 +22,8 @@ logger.info('Version: ' + version + ' | Author: ' + author);
 
 // Create an express app instance we can use to attach middleware and HTTP routes
 const app = express();
+
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Use logging middleware
 app.use(pino);

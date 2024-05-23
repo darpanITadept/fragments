@@ -15,6 +15,8 @@ if (!(process.env.AWS_COGNITO_POOL_ID && process.env.AWS_COGNITO_CLIENT_ID)) {
   throw new Error('missing expected env vars: AWS_COGNITO_POOL_ID, AWS_COGNITO_CLIENT_ID');
 }
 
+logger.info('Cognito Authentication');
+
 // Create a Cognito JWT Verifier, which will confirm that any JWT we
 // get from a user is valid and something we can trust. See:
 // https://github.com/awslabs/aws-jwt-verify#cognitojwtverifier-verify-parameters
