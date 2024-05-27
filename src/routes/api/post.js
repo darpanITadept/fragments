@@ -18,6 +18,7 @@ module.exports = async (req, res) => {
   }
 
   // Setting the data to the fragment
+  newFragment.save();
   await newFragment.setData(data);
 
   // Fetching the current host based on the environment to set location header

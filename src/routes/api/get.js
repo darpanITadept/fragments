@@ -6,41 +6,40 @@ const logger = require('../../logger');
 /**
  * Get a list of fragments for the current user
  */
-module.exports.getFragment = (req, res) => {
+module.exports.getFragment = async (req, res) => {
+  const expand = req.query.expand == 1;
+
+  const currentFragments = await Fragment.byUser(req.user, expand);
   const response = createSuccessResponse({
-    fragments: [],
+    fragments: currentFragments,
   });
   res.status(200).json(response);
 };
 
+// Getting Fragment by ID
 module.exports.getFragmentId = async (req, res) => {
+  let fragment, data;
+
+  // Fetching fragment by ID
   try {
-    // Logging request details
-    logger.info(`GET /fragments/${req.params.id} requested by user ${req.user}`);
-
-    // Fetching fragment by ID
-    const fragment = await Fragment.byId(req.user, req.params.id);
-
-    if (!fragment) {
-      console.log(`Fragment with id ${req.params.id} not found for user ${req.user}`);
-      return res.status(404).json({ error: 'Fragment not found' });
-    }
-
-    // Fetching fragment data
-    const data = await fragment.getData();
-
-    // Logging data details
-    logger.info(`Fragment data retrieved for id ${req.params.id}`);
-
-    // Assuming 'data' is a buffer, send it directly with appropriate headers
-    res.status(200).send(data);
+    fragment = await Fragment.byId(req.user, req.params.id);
+    logger.info(`Fragment found: ${JSON.stringify(fragment)}`);
   } catch (error) {
-    // Logging error details
-    console.error(`Error fetching fragment id ${req.params.id}:`, error);
-
-    // Sending error response
-    res.status(500).json({ error: 'Internal Server Error' });
+    logger.error(`Error fetching fragment by ID: ${error.message}`);
+    return res.status(404).json({ error: 'Fragment not found' });
   }
+
+  // Fetching fragment data
+  try {
+    data = await fragment.getData();
+    logger.info(`Fragment data retrieved for id ${req.params.id}`);
+  } catch (error) {
+    logger.error(`Error retrieving fragment data: ${error.message}`);
+    return res.status(500).json({ error: 'Error retrieving fragment data' });
+  }
+
+  // Assuming 'data' is a buffer, send it directly with appropriate headers
+  res.status(200).send(data);
 };
 
 // curl -i \

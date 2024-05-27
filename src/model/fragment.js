@@ -61,6 +61,7 @@ class Fragment {
     if (!result) {
       throw new Error('Fragment does not exist!');
     }
+    // Return an instance of Fragment
     return result;
   }
 
@@ -89,7 +90,18 @@ class Fragment {
    * @returns Promise<Buffer>
    */
   getData() {
-    return readFragmentData(this.ownerId, this.id);
+    try {
+      const data = readFragmentData(this.ownerId, this.id);
+      console.log(
+        `Data retrieved for fragment ${this.id} of user ${this.ownerId}: ${data ? 'found' : 'not found'}`
+      );
+      return data;
+    } catch (error) {
+      console.error(
+        `Error reading data for fragment ${this.id} of user ${this.ownerId}: ${error.message}`
+      );
+      throw error;
+    }
   }
 
   /**
